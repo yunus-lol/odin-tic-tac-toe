@@ -1,5 +1,7 @@
 const board = {
-  gameboard : ["", "", "", "", "", "", "", "", ""]
+  gameboard : ["", "", "", "", "", "", "", "", ""],
+  player1 : createPlayer("player 1", "X"),
+  player2 : createPlayer("player 2", "O")
 }
 
 const winConditions = [
@@ -43,35 +45,47 @@ function checkWin() {
   return roundWon;
 }
 
-function initialise() {
-  const player1 = createPlayer("player 1", "X")
-  const player2 = createPlayer("player 2", "O")
+function createBoard() {
+  const game = document.querySelector(".game");
+  for (let x = 0; x < 9; x++) {
+    const buttons = document.createElement("button")
+    buttons.textContent = "";
+    buttons.classList.add("button")
 
-  let currentPlayer;
-  let playerCounter = 9;
-  let running = true;
-
-  while (running) {
-    if (playerCounter % 2 === 0) {
-      currentPlayer = player2;
-    } else {
-      currentPlayer = player1;
-    }
-
-    let choice = prompt("Enter index")
-
-    addMarker(currentPlayer.marker, choice)
-    playerCounter--
-
-
-    const won = checkWin()
-    if (won) {
-      running = false
-      console.log(`winner is ${currentPlayer.name}`)
-      break
-    }
+    game.appendChild(buttons)
+    let index = buttons[x]
+    updateCell(index)
   }
-  console.log(board.gameboard)
+
+  function updateCell(cell) {
+    let currentPlayer;
+    let playerCounter = 9;
+    let running = true;
+
+    const selectedButtons = document.querySelectorAll(".button")
+    selectedButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        while (running) {
+          if (playerCounter % 2 === 0) {
+            currentPlayer = board.player2;
+          } else {
+            currentPlayer = board.player1;
+          }
+          
+          button.textContent = currentPlayer.marker
+          playerCounter--
+
+          addMarker(currentPlayer.marker, bob)
+          const won = checkWin()
+          if (won) {
+            running = false
+            console.log(`winner is ${currentPlayer.name}`)
+            break
+          }
+        }
+      }) 
+    });
+  }
 }
 
-initialise()
+createBoard()

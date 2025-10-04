@@ -1,3 +1,19 @@
 body {
-  background-color: rgb(40, 40, 40);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.button {
+  height: 100px;
+  width: 100px;
+}
+
+.game {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  place-items: center;
 }
