@@ -3,14 +3,14 @@ const board = {
 }
 
 const winConditions = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9],
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
   [1, 4, 7],
   [2, 5, 8],
-  [3, 6, 9],
-  [1, 5, 9],
-  [3, 5, 7]
+  [0, 4, 8],
+  [2, 4, 6]
 ];
 
 function createPlayer(name, marker) {
@@ -22,9 +22,25 @@ function addMarker(marker, index) {
 }
 
 function checkWin() {
+  roundWon = false;
+
   for (let x = 0; x < winConditions.length; x++) {
-    console.log(winConditions[x])
+    const condition = winConditions[x];
+    const firstCell = board.gameboard[condition[0]];
+    const secondCell = board.gameboard[condition[1]];
+    const thirdCell = board.gameboard[condition[2]];
+
+    if (firstCell == "" || secondCell == "" || thirdCell == "") {
+      continue;
+    }
+
+    if (firstCell == secondCell && secondCell == thirdCell) {
+      roundWon = true;
+      break;
+    }
   }
+
+  return roundWon;
 }
 
 function initialise() {
@@ -33,8 +49,9 @@ function initialise() {
 
   let currentPlayer;
   let playerCounter = 9;
+  let running = true;
 
-  while (true) {
+  while (running) {
     if (playerCounter % 2 === 0) {
       currentPlayer = player2;
     } else {
@@ -42,10 +59,17 @@ function initialise() {
     }
 
     let choice = prompt("Enter index")
+
     addMarker(currentPlayer.marker, choice)
     playerCounter--
 
-    if (playerCounter === 0) {break}
+
+    const won = checkWin()
+    if (won) {
+      running = false
+      console.log(`winner is ${currentPlayer.name}`)
+      break
+    }
   }
   console.log(board.gameboard)
 }
