@@ -6,14 +6,14 @@ body {
   overflow: hidden;
 }
 
-.button {
+.cell {
   height: 100px;
   width: 100px;
 }
 
 .game {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   place-items: center;
 }

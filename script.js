@@ -1,7 +1,24 @@
 const board = {
   gameboard : ["", "", "", "", "", "", "", "", ""],
-  player1 : createPlayer("player 1", "X"),
-  player2 : createPlayer("player 2", "O")
+  createBoard : function() {
+    const board = document.querySelector(".game")
+    for (let x = 0; x < 9; x++) {
+      const cell = document.createElement("button")
+      cell.classList.add("cell")
+      cell.setAttribute("cellIndex", `${x}`)
+      board.appendChild(cell)
+    }
+  },
+  updateCell : function(marker) {
+    const cells = document.querySelectorAll(".cell")
+    cells.forEach(cell => {
+      cell.addEventListener("click", () => {
+        const index = cell.getAttribute("cellIndex")
+        cell.textContent = marker;
+        console.log(Number(index))
+      })
+    });
+  },
 }
 
 const winConditions = [
@@ -45,47 +62,34 @@ function checkWin() {
   return roundWon;
 }
 
-function createBoard() {
-  const game = document.querySelector(".game");
-  for (let x = 0; x < 9; x++) {
-    const buttons = document.createElement("button")
-    buttons.textContent = "";
-    buttons.classList.add("button")
+function initialise() {
+  board.createBoard()
+  const player1 = createPlayer("player 1", "X")
+  const player2 = createPlayer("player 2", "O")
 
-    game.appendChild(buttons)
-    let index = buttons[x]
-    updateCell(index)
+  let currentPlayer;
+  let playerCounter = 9;
+  let running = true;
+  while (running) {
+    if (playerCounter % 2 === 0) {
+      currentPlayer = player2;
+    } else {
+      currentPlayer = player1;
+    }
+
+    board.updateCell(currentPlayer.marker)
+    addMarker(currentPlayer.marker, index)
+
+    playerCounter--
+    const won = checkWin()
+    if (won) {
+      running = false
+      console.log(`winner is ${currentPlayer.name}`)
+      break
+    }
   }
-
-  function updateCell(cell) {
-    let currentPlayer;
-    let playerCounter = 9;
-    let running = true;
-
-    const selectedButtons = document.querySelectorAll(".button")
-    selectedButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        while (running) {
-          if (playerCounter % 2 === 0) {
-            currentPlayer = board.player2;
-          } else {
-            currentPlayer = board.player1;
-          }
-          
-          button.textContent = currentPlayer.marker
-          playerCounter--
-
-          addMarker(currentPlayer.marker, bob)
-          const won = checkWin()
-          if (won) {
-            running = false
-            console.log(`winner is ${currentPlayer.name}`)
-            break
-          }
-        }
-      }) 
-    });
-  }
+  console.log(board.gameboard)
 }
 
-createBoard()
+
+initialise()
