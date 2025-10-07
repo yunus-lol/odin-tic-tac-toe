@@ -2,8 +2,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .cell {
@@ -16,4 +18,9 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   place-items: center;
+}
+
+.statusText {
+  text-align: center;
+  padding: 2em 0;
 }

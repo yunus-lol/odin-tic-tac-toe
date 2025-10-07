@@ -1,5 +1,3 @@
-let currentPlayer;
-
 const board = {
   gameboard : ["", "", "", "", "", "", "", "", ""],
   player1 : createPlayer("player 1", "X"),
@@ -14,6 +12,9 @@ const board = {
     }
   },
 }
+
+let currentPlayer = board.player2;
+let drawCounter = 9;
 
 const winConditions = [
   [0, 1, 2],
@@ -56,31 +57,46 @@ function checkWin() {
   return roundWon;
 }
 
-function initialise() {
-  board.createBoard()
-
-  if (currentPlayer = board.player1) {
-    currentPlayer = board.player2
-  } else {
-    currentPlayer = board.player1
-  }
-
+function reset() {
+  const resetButton = document.querySelector(".reset")
   const cells = document.querySelectorAll(".cell")
-  cells.forEach(cell => {
-    cell.addEventListener("click", () => {
-      const index = cell.getAttribute("cellindex")
-      cell.textContent = currentPlayer.marker
-      addMarker(currentPlayer.marker, index)
-      console.log(board.gameboard)
-    })
+  const statusText = document.querySelector(".statusText")
+  resetButton.addEventListener("click", () => {
+    board.gameboard = ["", "", "", "", "", "", "", "", ""];
+    currentPlayer = board.player1;
+    statusText.textContent = `current player: ${currentPlayer.name}`
+    cells.forEach(cell => cell.textContent = "")
+    drawCounter = 9
   })
-
-  const won = checkWin()
-  if (won) {
-    console.log(`winner is ${currentPlayer.name}`)
-  }
-  console.log(board.gameboard)
 }
 
+function initialise() {
+  board.createBoard()
+  const cells = document.querySelectorAll(".cell")
+  const statusText = document.querySelector(".statusText")
+  const resetButton = document.querySelector(".reset")
+  cells.forEach(cell => {
+    cell.addEventListener("click", () => {
+      if (cell.textContent === "" && checkWin() === false) {
+        currentPlayer = currentPlayer.marker === "X" ? currentPlayer = board.player2 : currentPlayer = board.player1;
+        statusText.textContent = `current player: ${currentPlayer.name}`
+        const index = cell.getAttribute("cellindex")
+        cell.textContent = currentPlayer.marker
+        addMarker(currentPlayer.marker, index)
+        drawCounter--
+      }
+
+      if (checkWin()) { 
+        statusText.textContent = `winner is ${currentPlayer.name}`
+      }
+
+      if (checkWin() === false && drawCounter === 0) {
+        statusText.textContent = "draw"
+      }
+
+    })
+  })
+  resetButton.addEventListener("click", reset())
+}
 
 initialise()
