@@ -1,5 +1,9 @@
+let currentPlayer;
+
 const board = {
   gameboard : ["", "", "", "", "", "", "", "", ""],
+  player1 : createPlayer("player 1", "X"),
+  player2 : createPlayer("player 2", "O"),
   createBoard : function() {
     const board = document.querySelector(".game")
     for (let x = 0; x < 9; x++) {
@@ -8,16 +12,6 @@ const board = {
       cell.setAttribute("cellIndex", `${x}`)
       board.appendChild(cell)
     }
-  },
-  updateCell : function(marker) {
-    const cells = document.querySelectorAll(".cell")
-    cells.forEach(cell => {
-      cell.addEventListener("click", () => {
-        const index = cell.getAttribute("cellIndex")
-        cell.textContent = marker;
-        console.log(Number(index))
-      })
-    });
   },
 }
 
@@ -37,7 +31,7 @@ function createPlayer(name, marker) {
 }
 
 function addMarker(marker, index) {
-  board.gameboard[index] += marker
+  board.gameboard[index] = marker
 }
 
 function checkWin() {
@@ -64,29 +58,26 @@ function checkWin() {
 
 function initialise() {
   board.createBoard()
-  const player1 = createPlayer("player 1", "X")
-  const player2 = createPlayer("player 2", "O")
 
-  let currentPlayer;
-  let playerCounter = 9;
-  let running = true;
-  while (running) {
-    if (playerCounter % 2 === 0) {
-      currentPlayer = player2;
-    } else {
-      currentPlayer = player1;
-    }
+  if (currentPlayer = board.player1) {
+    currentPlayer = board.player2
+  } else {
+    currentPlayer = board.player1
+  }
 
-    board.updateCell(currentPlayer.marker)
-    addMarker(currentPlayer.marker, index)
+  const cells = document.querySelectorAll(".cell")
+  cells.forEach(cell => {
+    cell.addEventListener("click", () => {
+      const index = cell.getAttribute("cellindex")
+      cell.textContent = currentPlayer.marker
+      addMarker(currentPlayer.marker, index)
+      console.log(board.gameboard)
+    })
+  })
 
-    playerCounter--
-    const won = checkWin()
-    if (won) {
-      running = false
-      console.log(`winner is ${currentPlayer.name}`)
-      break
-    }
+  const won = checkWin()
+  if (won) {
+    console.log(`winner is ${currentPlayer.name}`)
   }
   console.log(board.gameboard)
 }
